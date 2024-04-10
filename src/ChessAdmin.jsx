@@ -5,6 +5,7 @@ export default function ChessAdmin() {
     const [chessData, setChessData] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [formData, setFormData] = useState({ name: "", birth_date: "", world_ch_won: "", image_url: "" });
+    const [method, setMethod] = useState(false);
 
     useEffect(() => {
         axios
@@ -46,10 +47,26 @@ export default function ChessAdmin() {
             });
     };
 
+    const handlePut = (id) => {
+        axios
+            .put(`https://chess.sulla.hu/chess/${id}`, formData)
+            .then((response) => {
+                console.log(response);
+                setChessData(chessData.map((data) => (data.id === id ? response.data : data)));
+                setModalOpen(false);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     return (
         <>
             <h1 style={{ display: 'inline-block' }}>Admin felület</h1>
-            <button className="btn btn-success" style={{ float: 'right', marginTop: '10px' }} onClick={() => setModalOpen(true)}>
+            <button className="btn btn-success" style={{ float: 'right', marginTop: '10px' }} onClick={() => {
+                setModalOpen(true);
+                setMethod("post");
+            }}>
                 Hozzáadás
             </button>
             {modalOpen && (
@@ -59,9 +76,9 @@ export default function ChessAdmin() {
                     <input type="text" placeholder="Születési ideje:" value={formData.birth_date} onChange={(e) => setFormData({ ...formData, birth_date: e.target.value })} />
                     <input type="number" placeholder="Világbajnoki címek" value={formData.world_ch_won} onChange={(e) => setFormData({ ...formData, world_ch_won: e.target.value })} />
                     <input type="text" placeholder="Kép URL" value={formData.image_url} onChange={(e) => setFormData({ ...formData, image_url: e.target.value })} />
-                    <button className="btn btn-success" onClick={handleAdd} style={{
+                    <button className="btn btn-success" onClick={method === "post" ? handleAdd : handlePut} style={{
                         float: 'right',
-                    }}>Hozzáadás</button>
+                    }}>{method === "post" ? "Hozzáadás" : "Módosítás"}</button>
                     <button className="btn btn-danger" onClick={() => setModalOpen(false)} style={{
                         float: 'right',
                         marginRight: '10px'
@@ -77,7 +94,11 @@ export default function ChessAdmin() {
                             Név: {data.name}<br></br>
                             Szül. év: {data.birth_date}<br></br>
                             {data.world_ch_won < 1 ? "Nem volt világbajnok" : `${data.world_ch_won}x világbajnok`}
-                            <button className="btn btn-warning">
+                            <button className="btn btn-warning" onClick={() => {
+                                setModalOpen(true);
+                                setMethod("put");
+                                setFormData(data);
+                            }}>
                                 Szerkesztés
                             </button>
                             <br></br>
