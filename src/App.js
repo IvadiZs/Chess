@@ -11,13 +11,13 @@ function App() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <NavLink to={`/chess`} className="nav-link">
-                <span className="nav-link">Sakkozók</span>
+           <NavLink to={`/chess`} className="nav-link">
+              <span className="nav-link">Sakkozók</span>
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink to={`/admin`} className="nav-link">
-                <span className="nav-link">Admin</span>
+            <NavLink to={`/admin`} className="nav-link">
+              <span className="nav-link">Admin</span>
               </NavLink>
             </li>
           </ul>
@@ -25,8 +25,8 @@ function App() {
       </nav>
 
       <Routes>
-        <Route path="/admin" element={<ChessAdmin />} />
-        <Route path="/chess" element={<ChessPage />} />
+        <Route path="/admin" element={<ChessAdmin />}/>
+        <Route path="/chess" element={<ChessPage />}/>
       </Routes>
     </Router>
   );

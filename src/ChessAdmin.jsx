@@ -3,6 +3,8 @@ import axios from "axios";
 
 export default function ChessAdmin() {
     const [chessData, setChessData] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [formData, setFormData] = useState({ name: "", birth_date: "", world_ch_won: "", image_url: "" });
 
     useEffect(() => {
         axios
@@ -31,9 +33,42 @@ export default function ChessAdmin() {
         }
     };
 
+    const handleAdd = () => {
+        axios
+            .post("https://chess.sulla.hu/chess", formData)
+            .then((response) => {
+                console.log(response);
+                setChessData([...chessData, response.data]);
+                setModalOpen(false);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     return (
         <>
-            <h1>Sakkozók</h1>
+            <h1 style={{ display: 'inline-block' }}>Admin felület</h1>
+            <button className="btn btn-success" style={{ float: 'right', marginTop: '10px' }} onClick={() => setModalOpen(true)}>
+                Hozzáadás
+            </button>
+            {modalOpen && (
+                <div>
+                    <h2>Új sakkozó felvétele</h2>
+                    <input type="text" placeholder="Név:" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                    <input type="text" placeholder="Születési ideje:" value={formData.birth_date} onChange={(e) => setFormData({ ...formData, birth_date: e.target.value })} />
+                    <input type="number" placeholder="Világbajnoki címek" value={formData.world_ch_won} onChange={(e) => setFormData({ ...formData, world_ch_won: e.target.value })} />
+                    <input type="text" placeholder="Kép URL" value={formData.image_url} onChange={(e) => setFormData({ ...formData, image_url: e.target.value })} />
+                    <button className="btn btn-success" onClick={handleAdd} style={{
+                        float: 'right',
+                    }}>Hozzáadás</button>
+                    <button className="btn btn-danger" onClick={() => setModalOpen(false)} style={{
+                        float: 'right',
+                        marginRight: '10px'
+                    }}>Mégse</button>
+                </div>
+            )}
+            <br></br>
             <div className="row">
                 {chessData.map((data) => (
                     <div className="col-sm-12 col-md-6 col-lg-3 mb-3">
