@@ -49,7 +49,7 @@ export default function ChessAdmin() {
 
     const handlePut = (id) => {
         axios
-            .put(`https://chess.sulla.hu/chess/${id}`, formData)
+            .put(`https://chess.sulla.hu/chess/${formData.id}`, formData)
             .then((response) => {
                 console.log(response);
                 setChessData(chessData.map((data) => (data.id === id ? response.data : data)));
